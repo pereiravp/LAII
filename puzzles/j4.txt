@@ -1,0 +1,6 @@
+5 5
+bbecc
+eccbd
+bcdcb
+cdbda
+abcdb
