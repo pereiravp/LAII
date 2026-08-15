@@ -86,25 +86,31 @@ you about cell b3. The same goes for `r`, `l` and `g`.
 <rows lines of marks>       optional: '.' undecided, 'o' white, '#' crossed
 ```
 
-A fresh puzzle is just the dimensions and the letters — see `puzzles/`. Saved
+A fresh puzzle is just the dimensions and the letters, see `puzzles/`. Saved
 games carry the extra mark section, which is how the letters survive being
 crossed out and a saved game can be picked up where you left it.
 
 ## How the solver works
 
-Two layers.
+Two layers: deduction first, then search for the rest.
 
-**Deduction.** Six rules that only ever mark a cell when there is no
-alternative: a white letter forces its twins in the same row and column out; a
-crossed cell forces its neighbours white; a cell has to stay white if crossing
-it would strand a white neighbour; and three pattern rules on triples
-(`x x x`), sandwiches (`x y x`) and pairs (`x x`). The `a` and `A` commands use
-these directly, which is why their hints are always explainable.
+<details>
+<summary>Deduction rules and the backtracking search</summary>
 
-**Search.** Deduction alone stalls on harder boards. `R` runs the rules until
-they stop, then guesses a cell and recurses, backtracking whenever the rules
-hit a contradiction. That makes it correct on any board rather than only easy
-ones.
+Deduction is six rules that only ever mark a cell when there's no other
+option. A white letter forces its twins in the same row and column out, a
+crossed cell forces its neighbours white, a cell has to stay white if
+crossing it would strand a white neighbour, plus three pattern rules for
+triples (`x x x`), sandwiches (`x y x`) and pairs (`x x`). The `a` and `A`
+commands are just these rules applied directly, so every hint they give can
+be explained.
+
+Deduction alone isn't enough for harder boards, so `R` adds a search step on
+top: it runs the rules until they stop making progress, guesses a cell,
+recurses, and backtracks if a guess leads to a contradiction. That's what
+makes it able to solve any board, not just the easy ones.
+
+</details>
 
 ## Tests
 
